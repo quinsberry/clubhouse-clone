@@ -51,6 +51,10 @@ a {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
+.gap-50 {
+  gap: 50px;
+}
+
 .loader {
   display: inline-block;
   width: 2rem;

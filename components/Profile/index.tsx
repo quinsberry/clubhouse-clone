@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import React, { FC } from 'react'
 import clsx from 'clsx'
 import Link from 'next/link'
 
@@ -6,6 +6,7 @@ import { Avatar } from '@components/common/Avatar'
 import { Button } from '@components/common/Button'
 
 import styles from './Profile.module.scss'
+import { BackButton } from '@components/common/BackButton'
 
 interface ProfileProps {
     fullname: string
@@ -17,12 +18,7 @@ interface ProfileProps {
 export const Profile: FC<ProfileProps> = ({ fullname, username, avatarUrl, about }) => {
     return (
         <>
-            <Link href="/rooms">
-                <div className="d-flex mb-30 cup">
-                    <img src="/static/back-arrow.svg" alt="Back" className="mr-10" />
-                    <h3>Back</h3>
-                </div>
-            </Link>
+            <BackButton href="/rooms" title="Back" />
 
             <div className="d-flex  align-items-center">
                 <div className="d-flex align-items-center">

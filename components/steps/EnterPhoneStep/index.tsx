@@ -31,7 +31,7 @@ export const EnterPhoneStep: FC<EnterPhoneStepProps> = () => {
             />
             <WhiteBlock className={clsx('m-auto mt-30', styles.whiteBlock)}>
                 <div className={clsx('mb-30', styles.input)}>
-                    <img src="/static/ukraine-flag.webp" alt="flag" width={24} />
+                    <img src="/static/ukrainian-flag.webp" alt="flag" width={24} />
                     <NumberFormat
                         className="field"
                         format="+## (###) ###-##-##"
