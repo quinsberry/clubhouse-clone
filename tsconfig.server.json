@@ -1,0 +1,9 @@
+{
+    "extends": "./tsconfig.default.json",
+    "compilerOptions": {
+        "sourceMap": true,
+    },
+    "include": [
+        "server/**/*.ts",
+    ],
+}

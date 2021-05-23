@@ -21,6 +21,16 @@
   }
 }
 
+.importButton {
+  display: flex;
+  align-items: center;
+  margin: auto;
+
+  img {
+    height: 21px;
+  }
+}
+
 .whiteBlock {
   width: 460px;
 }
