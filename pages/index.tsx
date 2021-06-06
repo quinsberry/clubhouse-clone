@@ -91,6 +91,7 @@ export const getServerSideProps = async (ctx) => {
                 },
             }
         }
+        return { props: {} }
     } catch (err) {
         return { props: {} }
     }

@@ -3,14 +3,13 @@ import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import dynamic from 'next/dynamic'
 
-import { Axios } from '@core/axios'
-
 import { StepsContext } from '@pages/index'
 import { StepInfo } from '@components/StepInfo'
 import { WhiteBlock } from '@components/common/WhiteBlock'
 import { Button } from '@components/common/Button'
 
 import styles from './EnterCodeStep.module.scss'
+import { ClientService } from '@services/clientService'
 
 const ReactCodeInput = dynamic(import('react-code-input'))
 
@@ -36,7 +35,7 @@ export const EnterCodeStep: FC<EnterCodeStepProps> = () => {
     const onSubmit = async () => {
         try {
             setIsLoading(true)
-            await Axios.post('/auth/sms/activate', {
+            await ClientService().sendActivationCode({
                 code,
                 user: userData,
             })

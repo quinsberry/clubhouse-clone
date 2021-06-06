@@ -1,7 +1,6 @@
 import { FC, useContext, useState } from 'react'
 import NumberFormat from 'react-number-format'
 import clsx from 'clsx'
-import { Axios } from '@core/axios'
 
 import { StepInfo } from '@components/StepInfo'
 import { WhiteBlock } from '@components/common/WhiteBlock'
@@ -9,6 +8,7 @@ import { Button } from '@components/common/Button'
 import { StepsContext } from '@pages/index'
 
 import styles from './EnterPhoneStep.module.scss'
+import { ClientService } from '@services/clientService'
 
 interface InputValueState {
     formattedValue: string
@@ -28,7 +28,7 @@ export const EnterPhoneStep: FC<EnterPhoneStepProps> = () => {
     const onSubmit = async () => {
         try {
             setIsLoading(true)
-            await Axios.get(`/auth/sms?phone=${values.value}`)
+            await ClientService().sendActivationSms(values.value)
             setFieldValue('phone', values.value)
             onNextStep()
         } catch (err) {
