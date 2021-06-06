@@ -23,7 +23,7 @@ export const EnterCodeStep: FC<EnterCodeStepProps> = () => {
 
     const [isLoading, setIsLoading] = useState(false)
     const [code, setCode] = useState('')
-    const [key, setKey] = useState(1)
+    const [rerenderTrigger, makeRerender] = useState(1)
 
     useEffect(() => {
         if (code.length === 4) {
@@ -46,7 +46,7 @@ export const EnterCodeStep: FC<EnterCodeStepProps> = () => {
         } catch (error) {
             setTimeout(() => {
                 setCode('')
-                setKey(key + 1)
+                makeRerender(rerenderTrigger + 1)
                 console.error('Activation error\n', error)
                 setIsLoading(false)
             }, 1000)
@@ -67,7 +67,7 @@ export const EnterCodeStep: FC<EnterCodeStepProps> = () => {
                 <StepInfo icon='/static/numbers.png' title='Enter your activate code' />
                 <WhiteBlock className={clsx('m-auto mt-30', styles.whiteBlock)}>
                     <ReactCodeInput
-                        key={key}
+                        key={rerenderTrigger}
                         name='code'
                         value={code}
                         onChange={handleChangeInput}

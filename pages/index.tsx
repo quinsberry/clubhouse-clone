@@ -7,6 +7,8 @@ import { ChooseAvatarStep } from '@components/steps/ChooseAvatarStep'
 import { EnterPhoneStep } from '@components/steps/EnterPhoneStep'
 import { EnterCodeStep } from '@components/steps/EnterCodeStep'
 import { ValueOf } from '@tps/utils.types'
+import { PersistenceService } from '@services/persistenceService'
+import { checkAuth } from '@utils/checkAuth'
 
 export interface UserData {
     id: number
@@ -20,13 +22,22 @@ export interface UserData {
     token?: string
 }
 
+export enum AuthSteps {
+    WelcomeStep,
+    GithubStep,
+    EnterNameStep,
+    ChooseAvatarStep,
+    EnterPhoneStep,
+    EnterCodeStep,
+}
+
 const stepsComponents = {
-    0: WelcomeStep,
-    1: GithubStep,
-    2: EnterNameStep,
-    3: ChooseAvatarStep,
-    4: EnterPhoneStep,
-    5: EnterCodeStep,
+    [AuthSteps.WelcomeStep]: WelcomeStep,
+    [AuthSteps.GithubStep]: GithubStep,
+    [AuthSteps.EnterNameStep]: EnterNameStep,
+    [AuthSteps.ChooseAvatarStep]: ChooseAvatarStep,
+    [AuthSteps.EnterPhoneStep]: EnterPhoneStep,
+    [AuthSteps.EnterCodeStep]: EnterCodeStep,
 }
 
 interface StepsContextProps {
@@ -55,7 +66,7 @@ export default function Home() {
 
     useEffect(() => {
         if (userData) {
-            window.localStorage.setItem('userData', JSON.stringify(userData))
+            PersistenceService.addUserData(userData)
         }
     }, [userData])
 
@@ -65,4 +76,22 @@ export default function Home() {
             <Step />
         </StepsContext.Provider>
     )
+}
+
+export const getServerSideProps = async (ctx) => {
+    try {
+        const user = await checkAuth(ctx)
+
+        if (user) {
+            return {
+                props: {},
+                redirect: {
+                    destination: '/rooms',
+                    permanent: false,
+                },
+            }
+        }
+    } catch (err) {
+        return { props: {} }
+    }
 }

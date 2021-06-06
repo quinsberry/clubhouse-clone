@@ -1,9 +1,9 @@
 import { GetServerSideProps } from 'next'
 import Link from 'next/link'
-import { Axios } from '@core/axios'
 import { Header } from '@components/Header'
 import { Button } from '@components/common/Button'
 import { ConversationCard } from '@components/ConversationCard'
+import { checkAuth } from '@utils/checkAuth'
 
 export default function RoomsPage({ rooms = [] }) {
     return (
@@ -34,16 +34,26 @@ export default function RoomsPage({ rooms = [] }) {
     )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
     try {
-        const { data } = await Axios.get('/rooms.json')
+        const user = await checkAuth(ctx)
+
+        if (!user) {
+            return {
+                props: {},
+                redirect: {
+                    permanent: false,
+                    destination: '/',
+                },
+            }
+        }
+
         return {
-            props: {
-                rooms: data,
-            },
+            props: {},
         }
     } catch (error) {
-        console.log('ERROR!')
+        console.error('RoomsPage/getServerSideProps error:\n', error)
         return {
             props: {
                 rooms: [],
@@ -51,3 +61,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
         }
     }
 }
+

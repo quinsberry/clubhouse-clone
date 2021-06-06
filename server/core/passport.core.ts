@@ -7,10 +7,7 @@ import { UserData } from '@pages/index'
 import { createJwtToken } from '@server/utils/createJwtToken'
 // @ts-ignore Import model from js file
 import { User } from '@server/database/models'
-
-export enum CookieKeys {
-    TOKEN = 'clubhstoken',
-}
+import { CookieKeys } from '@tps/global.types'
 
 const cookieExtractor = (req: Request) => {
     let token = null

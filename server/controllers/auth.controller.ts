@@ -3,7 +3,7 @@ import cookie from 'cookie'
 // @ts-ignore Import models from js file
 import { Code, User } from '@server/database/models'
 import { omit } from '@server/utils/helpers'
-import { CookieKeys } from '@server/core/passport.core'
+import { CookieKeys } from '@tps/global.types'
 // import axios from 'axios'
 // import { generateRandomCode } from '@server/utils/generateRandomCode'
 
@@ -20,7 +20,7 @@ class AuthController {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
-                maxAge: 3600,
+                maxAge: 30 * 24 * 60 * 60,
                 path: '/',
             }),
         )

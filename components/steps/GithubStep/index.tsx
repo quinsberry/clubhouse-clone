@@ -8,12 +8,14 @@ import { StepsContext } from '@pages/index'
 
 import styles from './GithubStep.module.scss'
 import { BASE_URL } from '@core/axios'
+import { useRouter } from 'next/router'
 
 interface GithubStepProps {
 }
 
 export const GithubStep: FC<GithubStepProps> = () => {
     const { onNextStep, setUserData } = useContext(StepsContext)
+    const router = useRouter()
 
     useEffect(() => {
         const handleOnMessage = ({ data }) => {
@@ -21,7 +23,11 @@ export const GithubStep: FC<GithubStepProps> = () => {
             if (typeof userJson === 'string' && userJson.includes('avatarUrl')) {
                 const user = JSON.parse(userJson)
                 setUserData(user)
-                onNextStep()
+                if (!!user.isActive) {
+                    router.push('/rooms')
+                } else {
+                    onNextStep()
+                }
             }
         }
         window.addEventListener('message', handleOnMessage)
