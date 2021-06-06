@@ -1,7 +1,37 @@
 import passport from 'passport'
+import { Request } from 'express'
 import { Strategy as GithubStrategy } from 'passport-github'
-// @ts-ignore It need to change to ts
-import { User } from '../database/models'
+import { Strategy as JwtStrategy } from 'passport-jwt'
+import cookie from 'cookie'
+import { UserData } from '@pages/index'
+import { createJwtToken } from '@server/utils/createJwtToken'
+// @ts-ignore Import model from js file
+import { User } from '@server/database/models'
+
+export enum CookieKeys {
+    TOKEN = 'clubhstoken',
+}
+
+const cookieExtractor = (req: Request) => {
+    let token = null
+    if (req && req.headers.cookie) {
+        token = cookie.parse(req.headers.cookie)[CookieKeys.TOKEN]
+    }
+    return token
+}
+
+const opts = {
+    jwtFromRequest: cookieExtractor,
+    secretOrKey: process.env.JWT_SECRET_KEY,
+}
+
+passport.use(
+    'jwt',
+    new JwtStrategy(opts, (jwt_payload, done) => {
+        done(null, jwt_payload.data)
+    }),
+)
+
 
 passport.use('github', <passport.Strategy>new GithubStrategy({
         clientID: process.env.GITHUB_CLIENT_ID,
@@ -10,10 +40,10 @@ passport.use('github', <passport.Strategy>new GithubStrategy({
     },
     async (_, __, profile, done) => {
         try {
-            let userData: any // UserData
+            let userData: UserData
 
-            const userObj: any = { // Omit<UserData, 'id'>
-                fullname: profile.displayName ?? profile.name,
+            const userObj: Omit<UserData, 'id' | 'createdAt' | 'updatedAt' | 'token'> = {
+                fullname: profile.displayName,
                 avatarUrl: profile.photos?.[0].value,
                 isActive: 0,
                 username: profile.username,
@@ -33,10 +63,9 @@ passport.use('github', <passport.Strategy>new GithubStrategy({
                 userData = await findUser.toJSON()
             }
 
-            console.log(userData)
             done(null, {
                 ...userData,
-                // token: createJwtToken(userData),
+                token: createJwtToken(userData),
             })
         } catch (err) {
             done(err)
@@ -45,7 +74,6 @@ passport.use('github', <passport.Strategy>new GithubStrategy({
 ))
 
 passport.serializeUser(function(user, done) {
-    // @ts-ignore User problem
     done(null, user.id)
 })
 

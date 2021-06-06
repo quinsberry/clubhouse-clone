@@ -13,14 +13,14 @@ interface GithubStepProps {
 }
 
 export const GithubStep: FC<GithubStepProps> = () => {
-    const { onNextStep } = useContext(StepsContext)
+    const { onNextStep, setUserData } = useContext(StepsContext)
 
     useEffect(() => {
         const handleOnMessage = ({ data }) => {
             const userJson: string = data
             if (typeof userJson === 'string' && userJson.includes('avatarUrl')) {
                 const user = JSON.parse(userJson)
-                console.log(user)
+                setUserData(user)
                 onNextStep()
             }
         }
@@ -55,7 +55,7 @@ export const GithubStep: FC<GithubStepProps> = () => {
                 </div>
                 <h2 className='mb-40'>Name Surname</h2>
                 <Button onClick={onClickAuth} className={styles.importButton}>
-                    <img src='/static/github.svg' alt='Twitter logo' className={styles.twitterLogo} />
+                    <img src='/static/github.svg' alt='Twitter logo' className={styles.githubLogo} />
                     Import from Github
                     <img className='d-ib ml-10' src='/static/arrow.svg' alt='arrow icon' />
                 </Button>

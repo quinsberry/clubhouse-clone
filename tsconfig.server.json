@@ -1,9 +1,11 @@
 {
-    "extends": "./tsconfig.default.json",
+    "extends": "./tsconfig.json",
     "compilerOptions": {
+        "module": "commonjs",
         "sourceMap": true,
+        "outDir": "../"
     },
     "include": [
-        "server/**/*.ts",
-    ],
+        "*.ts",
+    ]
 }

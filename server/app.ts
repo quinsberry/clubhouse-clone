@@ -1,18 +1,22 @@
 import dotenv from 'dotenv'
+import express from 'express'
+import cors from 'cors'
+
 dotenv.config({
     path: 'server/.env',
 })
-import express, { Response } from 'express'
-import { authRoutes } from './routes/auth.route'
-import { passport } from './core/passport.core'
-import './core/db.core'
+import { passport } from '@server/core/passport.core'
+import '@server/core/db.core'
+import { createRouter } from '@server/core/router.core'
+
 
 
 const app = express()
+app.use(express.json())
+app.use(cors({ credentials: true, origin: process.env.CLIENT_URL, optionsSuccessStatus: 200 }))
 app.use(passport.initialize())
 
-app.get('/', (_, res: Response) => res.send('It works'))
-app.use('/auth', authRoutes)
+createRouter(app)
 
 const PORT = process.env.PORT || 3001
 

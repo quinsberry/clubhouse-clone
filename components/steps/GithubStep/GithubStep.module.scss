@@ -25,9 +25,14 @@
   display: flex;
   align-items: center;
   margin: auto;
+  background-color: #24292e;
 
-  img {
-    height: 21px;
+  &:hover {
+    background-color: lighten(#24292e, 4%);
+  }
+
+  &:active {
+    background-color: darken(#24292e, 1%);
   }
 }
 
@@ -35,11 +40,12 @@
   width: 460px;
 }
 
-.twitterLogo {
+.githubLogo {
   display: inline-block;
   position: relative;
   top: 1px;
   margin-right: 6px;
+  height: 19px;
 }
 
 .title {

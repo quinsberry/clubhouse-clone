@@ -37,3 +37,5 @@ server/.env
 
 # vercel
 .vercel
+
+/public/avatars

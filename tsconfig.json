@@ -1,5 +1,20 @@
 {
     "compilerOptions": {
+        "outDir": "../",
+        "target": "es6",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "strict": false,
+        "forceConsistentCasingInFileNames": true,
+        "noEmit": true,
+        "esModuleInterop": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "jsx": "preserve",
+        "baseUrl": ".",
         "paths": {
             "@core/*": ["core/*"],
             "@components/*": ["components/*"],
@@ -7,10 +22,11 @@
             "@hooks/*": ["hooks/*"],
             "@pages/*": ["pages/*"],
             "@styles/*": ["styles/*"],
-            "@tps/*": ["types/*"]
+            "@tps/*": ["types/*"],
+            "@utils/*": ["utils/*"],
+            "@server/*": ["server/*"],
         }
     },
-    "extends": "./tsconfig.default.json",
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-    "exclude": ["node_modules", "server"]
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "server/types.d.ts"],
+    "exclude": ["node_modules"]
 }
