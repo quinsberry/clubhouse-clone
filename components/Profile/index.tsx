@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
 import clsx from 'clsx'
-import Link from 'next/link'
 
 import { Avatar } from '@components/common/Avatar'
 import { Button } from '@components/common/Button'
@@ -18,7 +17,9 @@ interface ProfileProps {
 export const Profile: FC<ProfileProps> = ({ fullname, username, avatarUrl, about }) => {
     return (
         <>
-            <BackButton href="/rooms" title="Back" />
+            <div className="d-if mb-30">
+                <BackButton title="Back" />
+            </div>
 
             <div className="d-flex  align-items-center">
                 <div className="d-flex align-items-center">

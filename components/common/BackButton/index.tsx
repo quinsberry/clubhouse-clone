@@ -1,18 +1,18 @@
 import { FC } from 'react'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 interface BackButtonProps {
     title: string
-    href: string
+    href?: string
 }
 
 export const BackButton: FC<BackButtonProps> = ({ title, href }) => {
+    const router = useRouter()
+    const handleOnClick = () => !href ? router.back() : router.push(href)
     return (
-        <Link href={href}>
-            <div className='d-flex mb-30 cup'>
-                <img src='/static/back-arrow.svg' alt='Back' className='mr-10' />
-                <h3>{title}</h3>
-            </div>
-        </Link>
+        <div className='d-if cup' onClick={handleOnClick}>
+            <img src='/static/back-arrow.svg' alt='Back' className='mr-10' />
+            <h3>{title}</h3>
+        </div>
     )
 }

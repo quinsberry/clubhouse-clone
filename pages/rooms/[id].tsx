@@ -1,36 +1,42 @@
 import { GetServerSideProps } from 'next'
 import { Header } from '@components/Header'
-import { Room } from '@components/Room'
+import { Room as RoomComponent } from '@components/Room'
 import { BackButton } from '@components/common/BackButton'
-import { Axios } from '@core/axios'
+import { Room } from '@api/room.api'
+import { ClientService } from '@services/clientService'
+import { assertType } from '@tps/guards.types'
+import { isRoom } from '@utils/entitiesCheckers'
 
-export default function RoomPage({ room }) {
+export default function RoomPage({ room }: { room?: Room }) {
     return (
         <>
             <Header />
             <div className='container mt-40'>
                 <BackButton title='All rooms' href='/rooms' />
             </div>
-            <Room title={room.title} />
+            {!room ? null : <RoomComponent title={room.title} />}
         </>
     )
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<{ room: Room }> = async (ctx) => {
     try {
-        const { data } = await Axios.get('/rooms.json')
-        const roomId = ctx.query.id
-        const room = data.find((obj) => obj.id === roomId)
+        const roomId = ctx.query.id as string
+        const room = await ClientService(ctx).getRoom(roomId)
+        assertType<Room>(room, room => isRoom(room))
+
         return {
             props: {
                 room,
             },
         }
     } catch (error) {
-        console.log('ERROR!')
+        console.log(`Room page, ${error.response.status}: ${error.response.statusText}`)
         return {
-            props: {
-                rooms: [],
+            props: {},
+            redirect: {
+                permanent: false,
+                destination: '/rooms',
             },
         }
     }

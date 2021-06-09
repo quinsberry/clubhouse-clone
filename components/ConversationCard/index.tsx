@@ -5,58 +5,57 @@ import { Avatar } from '@components/common/Avatar'
 
 import styles from './ConversationCard.module.scss'
 import whiteBlockStyles from '@components/common/WhiteBlock/WhiteBlock.module.scss'
+import { UserData } from '@pages/index'
 
 interface ConversationCard {
     title: string;
-    guests: string[]
-    avatars: string[]
-    guestsCount: number
-    speakersCount: number
+    speakers: UserData[]
+    listenersCount: number
+
 }
 
 export const ConversationCard: FC<ConversationCard> = ({
                                                            title,
-                                                           guests = [],
-                                                           avatars = [],
-                                                           guestsCount,
-                                                           speakersCount,
+                                                           speakers = [],
+                                                           listenersCount,
                                                        }) => {
     return (
         <div className={clsx(whiteBlockStyles.block, styles.card)}>
             <h4 className={styles.title}>{title}</h4>
             <div className={clsx('d-flex mt-10', styles.content)}>
                 <div className={styles.avatars}>
-                    {avatars.map((url, i) => (
+                    {speakers.map((user, i) => (
                         <Avatar
-                            key={url}
+                            key={user.id}
                             width='45px'
                             height='45px'
-                            src={url}
-                            className={avatars.length > 1 && i === avatars.length - 1 ? 'lastAvatar' : ''}
+                            src={user.avatarUrl}
+                            className={speakers.length > 1 && i === speakers.length - 1 ? 'lastAvatar' : ''}
                         />
                     ))}
                 </div>
                 <div className={clsx(styles.info, 'ml-10')}>
                     <ul className={styles.users}>
-                        {guests.map((name, i) => (
-                            <li key={name + i}>
-                                {name} <img src='/static/cloud.png' alt='Cloud' width={14} height={14} />
+                        {speakers.map(user => (
+                            <li key={user.id}>
+                                {user.fullname} <img src='/static/cloud.png' alt='Cloud' width={14} height={14} />
                             </li>
                         ))}
                     </ul>
                     <ul className={styles.details}>
                         <li>
-                            {guestsCount} <img src='/static/user.svg' alt='Users count' width={12} height={12} />
+                            <img src='/static/user.svg' alt='Users count' width={12} height={12} />
+                            {' '}{listenersCount}
                         </li>
                         <li>
-                            {speakersCount}
                             <img
                                 className='ml-5'
                                 src='/static/message.svg'
                                 alt='Users count'
                                 width={12}
                                 height={12}
-                            />
+                            />{' '}
+                            {speakers.length}
                         </li>
                     </ul>
                 </div>

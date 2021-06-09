@@ -5,12 +5,14 @@ import { BASE_URL } from '@core/axios'
 import { UserApi } from '@api/user.api'
 import { Axios } from '@core/axios'
 import { AuthApi } from '@api/auth.api'
+import { RoomApi } from '@api/room.api'
 
-type ApiReturnType =
+type ClientServiceEndpoints =
     & ReturnType<typeof UserApi>
     & ReturnType<typeof AuthApi>
+    & ReturnType<typeof RoomApi>
 
-export const ClientService = (ctx?: GetServerSidePropsContext) => {
+export const ClientService = (ctx?: GetServerSidePropsContext): ClientServiceEndpoints => {
     let instance: AxiosInstance
 
     if (ctx) {
@@ -26,5 +28,5 @@ export const ClientService = (ctx?: GetServerSidePropsContext) => {
         instance = Axios
     }
 
-    return [UserApi, AuthApi].reduce((prev, f) => ({ ...prev, ...f(instance) }), {} as ApiReturnType)
+    return [UserApi, AuthApi, RoomApi].reduce((prev, f) => ({ ...prev, ...f(instance) }), {} as ClientServiceEndpoints)
 }
