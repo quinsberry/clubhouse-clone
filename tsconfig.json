@@ -17,8 +17,9 @@
         "baseUrl": ".",
         "paths": {
             "@api/*": ["api/*"],
-            "@core/*": ["core/*"],
             "@components/*": ["components/*"],
+            "@core/*": ["core/*"],
+            "@generated/*": ["generated/*"],
             "@store/*": ["store/*"],
             "@hooks/*": ["hooks/*"],
             "@pages/*": ["pages/*"],

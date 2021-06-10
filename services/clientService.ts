@@ -1,11 +1,11 @@
 import { GetServerSidePropsContext } from 'next'
-import { CookieKeys } from '@tps/global.types'
 import axios, { AxiosInstance } from 'axios'
 import { BASE_URL } from '@core/axios'
 import { UserApi } from '@api/user.api'
 import { Axios } from '@core/axios'
 import { AuthApi } from '@api/auth.api'
 import { RoomApi } from '@api/room.api'
+import { $CookieKeys } from '@generated/AppModels'
 
 type ClientServiceEndpoints =
     & ReturnType<typeof UserApi>
@@ -16,12 +16,12 @@ export const ClientService = (ctx?: GetServerSidePropsContext): ClientServiceEnd
     let instance: AxiosInstance
 
     if (ctx) {
-        const token = ctx.req.cookies[CookieKeys.TOKEN]
+        const token = ctx.req.cookies[$CookieKeys.TOKEN]
 
         instance = axios.create({
             baseURL: BASE_URL,
             headers: {
-                cookie: `${[CookieKeys.TOKEN]}=${token}`,
+                cookie: `${[$CookieKeys.TOKEN]}=${token}`,
             },
         })
     } else {

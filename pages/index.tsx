@@ -9,16 +9,9 @@ import { EnterCodeStep } from '@components/steps/EnterCodeStep'
 import { ValueOf } from '@tps/utils.types'
 import { PersistenceService } from '@services/persistenceService'
 import { checkAuth } from '@utils/checkAuth'
+import { $User } from '@generated/AppModels'
 
-export interface UserData {
-    id: number
-    fullname: string
-    avatarUrl: string
-    isActive: number
-    username: string
-    phone: string
-    createdAt: Date
-    updatedAt: Date
+export interface UserData extends $User {
     token?: string
 }
 

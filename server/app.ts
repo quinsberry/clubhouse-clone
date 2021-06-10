@@ -8,6 +8,7 @@ dotenv.config({
 import { passport } from '@server/core/passport.core'
 import '@server/core/db.core'
 import { createRouter } from '@server/core/router.core'
+import { generateTsModels } from '@server/utils/generateTsModels'
 
 
 
@@ -17,6 +18,7 @@ app.use(cors({ credentials: true, origin: process.env.CLIENT_URL, optionsSuccess
 app.use(passport.initialize())
 
 createRouter(app)
+generateTsModels()
 
 const PORT = process.env.PORT || 3001
 

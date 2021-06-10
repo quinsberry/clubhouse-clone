@@ -3,10 +3,11 @@ import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import styles from './StartRoomModal.module.scss'
 import { Button } from '@components/common/Button'
-import { Room, RoomType } from '@api/room.api'
+import { Room } from '@api/room.api'
 import { ClientService } from '@services/clientService'
 import { assertType } from '@tps/guards.types'
 import { isRoom } from '@utils/entitiesCheckers'
+import { $RoomType } from '@generated/AppModels'
 
 interface StartRoomModalProps {
     onClose: () => void;
@@ -16,7 +17,7 @@ export const StartRoomModal: React.FC<StartRoomModalProps> = ({ onClose }) => {
     const router = useRouter()
 
     const [title, setTitle] = React.useState<string>('')
-    const [type, setType] = React.useState<RoomType>(RoomType.Open)
+    const [type, setType] = React.useState<$RoomType>($RoomType.Open)
     // const createRoom = useAsyncAction<any, Room>(fetchCreateRoom)
 
     const modalRef = useRef<HTMLDivElement>()
@@ -69,20 +70,20 @@ export const StartRoomModal: React.FC<StartRoomModalProps> = ({ onClose }) => {
                     <h3>Room type</h3>
                     <div className='d-flex justify-content-between'>
                         <div
-                            onClick={() => setType(RoomType.Open)}
-                            className={clsx(styles.roomType, { [styles.roomTypeActive]: type === RoomType.Open })}>
+                            onClick={() => setType($RoomType.Open)}
+                            className={clsx(styles.roomType, { [styles.roomTypeActive]: type === $RoomType.Open })}>
                             <img width='70px' height='70px' src='/static/room-type-1.png' alt='Room type' />
                             <h5>Open</h5>
                         </div>
                         <div
-                            onClick={() => setType(RoomType.Social)}
-                            className={clsx(styles.roomType, { [styles.roomTypeActive]: type === RoomType.Social })}>
+                            onClick={() => setType($RoomType.Social)}
+                            className={clsx(styles.roomType, { [styles.roomTypeActive]: type === $RoomType.Social })}>
                             <img width='70px' height='70px' src='/static/room-type-2.png' alt='Room type' />
                             <h5>Social</h5>
                         </div>
                         <div
-                            onClick={() => setType(RoomType.Closed)}
-                            className={clsx(styles.roomType, { [styles.roomTypeActive]: type === RoomType.Closed })}>
+                            onClick={() => setType($RoomType.Closed)}
+                            className={clsx(styles.roomType, { [styles.roomTypeActive]: type === $RoomType.Closed })}>
                             <img width='70px' height='70px' src='/static/room-type-3.png' alt='Room type' />
                             <h5>Closed</h5>
                         </div>
