@@ -3,7 +3,7 @@ import cookie from 'cookie'
 // @ts-ignore Import models from js file
 import { Code, User } from '@server/database/models'
 import { omit } from '@server/utils/helpers'
-import { CookieKeys } from '@tps/global.types'
+import { CookieKeys } from '@server/core/passport.core'
 // import axios from 'axios'
 // import { generateRandomCode } from '@server/utils/generateRandomCode'
 

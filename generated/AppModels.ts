@@ -32,6 +32,8 @@ export interface $Room {
     type: $RoomType
     speakers: any[]
     listenersCount: number
+    createdAt: Date
+    updatedAt: Date
 }
 
 export interface $User {

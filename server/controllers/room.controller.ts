@@ -3,6 +3,12 @@ import { Request, Response } from 'express'
 import { Room } from '@server/database/models'
 
 
+export enum RoomType {
+    Open = 'open',
+    Social = 'social',
+    Closed = 'closed',
+}
+
 class RoomController {
     async index(req: Request, res: Response) {
         try {
@@ -22,6 +28,10 @@ class RoomController {
 
             if (!data.title || !data.type) {
                 return res.status(400).json({ message: 'Title or type was not found' })
+            }
+
+            if (data.type !== RoomType.Open || data.type !== RoomType.Social || data.type !== RoomType.Closed) {
+                return res.status(422).json({ message: 'Invalid room type' })
             }
 
             const room = await Room.create(data)

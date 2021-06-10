@@ -1,6 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
+// TODO: Make creating of this content automatic
 const additionalContent = `
 export enum $CookieKeys {
     TOKEN = 'clubhstoken',
@@ -13,7 +14,8 @@ export enum $RoomType {
 }
 `
 
-// TODO: Make creating of this content automatic (use models files)
+
+// TODO: Make creating of this content automatic too (use models files)
 const generatedContent = `
 /*
  * Generator-Maintained File
@@ -38,6 +40,8 @@ export interface $Room {
     type: $RoomType
     speakers: any[]
     listenersCount: number
+    createdAt: Date
+    updatedAt: Date
 }
 
 export interface $User {
