@@ -6,5 +6,15 @@ export const UserApi = (instance: AxiosInstance) => {
             const { data } = await instance.get<unknown>('/auth/me')
             return data
         },
+        uploadAvatar: async (photoFile: File): Promise<unknown> => {
+            const formData = new FormData()
+            formData.append('photo', photoFile)
+            const { data } = await instance.post('/upload/avatar', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            return data
+        },
     }
 }

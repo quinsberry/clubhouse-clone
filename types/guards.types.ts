@@ -4,6 +4,10 @@ export function assertType<T>(value: any, predicate: (value: any) => boolean, me
     }
 }
 
+export function assertNonNull<T>(value: T, message?: string): asserts value is NonNullable<T> {
+    return assertType<T>(value, value => value != null, message)
+}
+
 export function validateFirstElementInList(list: any[], check: (element: any) => boolean): boolean {
     if (Array.isArray(list)) {
         if (list.length > 0) {

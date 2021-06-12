@@ -6,11 +6,11 @@ import { GithubStep } from '@components/steps/GithubStep'
 import { ChooseAvatarStep } from '@components/steps/ChooseAvatarStep'
 import { EnterPhoneStep } from '@components/steps/EnterPhoneStep'
 import { EnterCodeStep } from '@components/steps/EnterCodeStep'
-import { ValueOf } from '@tps/utils.types'
 import { PersistenceService } from '@services/persistenceService'
 import { checkAuth } from '@utils/checkAuth'
 import { $User } from '@generated/AppModels'
 import { storeWrapper } from '@store/store'
+import { assertNonNull } from '@tps/guards.types'
 
 export interface UserData extends $User {
     token?: string
@@ -35,27 +35,26 @@ const stepsComponents = {
 }
 
 interface StepsContextProps {
-    step: number
-    userData: UserData
+    step: AuthSteps
+    userData: UserData | null
     onNextStep: () => void
-    setUserData: Dispatch<SetStateAction<UserData>>
-    setFieldValue: (field: keyof UserData, value: ValueOf<UserData>) => void
+    setUserData: Dispatch<SetStateAction<UserData | null>>
+    setFieldValue: <Field extends keyof UserData>(field: Field, value: UserData[Field]) => void
 }
 
 export const StepsContext = createContext<StepsContextProps>({} as StepsContextProps)
-
 export default function Home() {
-    const [step, setStep] = useState<number>(0)
-    const [userData, setUserData] = useState<UserData>(null)
+    const [step, setStep] = useState<AuthSteps>(AuthSteps.WelcomeStep)
+    const [userData, setUserData] = useState<UserData | null>(null)
     const Step = stepsComponents[step]
 
     const onNextStep = () => setStep((prev) => prev + 1)
 
-    const setFieldValue = (field: keyof UserData, value: ValueOf<UserData>) => {
-        setUserData(prev => ({
-            ...prev,
-            [field]: value,
-        }))
+    const setFieldValue = <Field extends keyof UserData>(field: Field, value: UserData[Field]): void => {
+        assertNonNull(userData, 'This method cannot be called when userData equals null')
+        setUserData(prev => {
+            return ({ ...prev!, [field]: value })
+        })
     }
 
     useEffect(() => {
@@ -90,5 +89,5 @@ export const getServerSideProps = storeWrapper.getServerSideProps(
         } catch (err) {
             return { props: {} }
         }
-    }
+    },
 )

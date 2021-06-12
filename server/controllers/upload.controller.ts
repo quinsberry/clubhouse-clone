@@ -1,13 +1,16 @@
 import fs from 'fs'
 import sharp from 'sharp'
+import { Request, Response } from 'express'
 
 class UploadController {
-    avatar(req, res) {
+    avatar(req: Request, res: Response) {
         const filePath = req.file.path
+        const fileNameParts = req.file.path.split('.')
+        const fileExtension = '.' + fileNameParts[fileNameParts.length - 1]
         sharp(filePath)
             .resize(150, 150)
             .toFormat('jpeg')
-            .toFile(filePath.replace('.png', '.jpeg'), (err) => {
+            .toFile(filePath.replace(fileExtension, '.jpeg'), (err) => {
                 if (err) {
                     throw err
                 }
@@ -15,7 +18,7 @@ class UploadController {
                 fs.unlinkSync(filePath)
 
                 res.json({
-                    url: `/avatars/${req.file.filename.replace('.png', '.jpeg')}`,
+                    url: `/avatars/${req.file.filename.replace(fileExtension, '.jpeg')}`,
                 })
             })
 

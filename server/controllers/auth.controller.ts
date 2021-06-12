@@ -10,13 +10,13 @@ import { CookieKeys } from '@server/core/passport.core'
 
 class AuthController {
     getMe(req: Request, res: Response) {
-        res.status(200).json(omit(req.user, 'token'))
+        res.status(200).json(omit(req.user!, 'token'))
     }
 
     githubCallback(req: Request, res: Response) {
         res.set(
             'Set-Cookie',
-            cookie.serialize(CookieKeys.TOKEN, req.user.token, {
+            cookie.serialize(CookieKeys.TOKEN, req.user!.token!, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
@@ -26,13 +26,13 @@ class AuthController {
         )
         res.send(
             `<script>window.opener.postMessage('${JSON.stringify(
-                omit(req.user, 'token'),
+                omit(req.user!, 'token'),
             )}', '*');window.close();</script>`,
         )
     }
 
     async activate(req: Request, res: Response) {
-        const userId = req.user.id
+        const userId = req.user!.id
         const { code, user } = req.body
 
         if (!code) {
@@ -68,7 +68,7 @@ class AuthController {
 
     async sendSMS(req: Request, res: Response) {
         const phone = req.query.phone
-        const userId = req.user.id
+        const userId = req.user!.id
         // const smsCode = generateRandomCode()
         const smsCode = 1234
 

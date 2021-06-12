@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import styles from './Avatar.module.scss'
 
 interface AvatarProps {
-    src: string
+    src?: string
     width: string
     height: string
     className?: string

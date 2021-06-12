@@ -5,24 +5,16 @@ import { WhiteBlock } from '@components/common/WhiteBlock'
 import { Avatar } from '@components/common/Avatar'
 import { Button } from '@components/common/Button'
 import { StepsContext } from '@pages/index'
-import { Axios } from '@core/axios'
 import { assertType } from '@tps/guards.types'
 import styles from './ChooseAvatarStep.module.scss'
+import { ClientService } from '@services/clientService'
 
 interface ChooseAvatarStepProps {
 }
 
 const uploadFile = async (file: File): Promise<{ url: string }> => {
     try {
-        const formData = new FormData()
-        formData.append('photo', file)
-        const response = await Axios.post('/upload/avatar', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        })
-
-        const data = response.data as unknown
+        const data = await ClientService().uploadAvatar(file)
         assertType<{ url: string }>(data, data => 'url' in data)
         return data
     } catch (err) {
@@ -32,12 +24,12 @@ const uploadFile = async (file: File): Promise<{ url: string }> => {
 
 export const ChooseAvatarStep: FC<ChooseAvatarStepProps> = () => {
     const { onNextStep, userData, setFieldValue } = useContext(StepsContext)
-    const [avatarUrl, setAvatarUrl] = useState<string>(userData.avatarUrl)
-    const avatarLetters = userData.fullname.split(' ').map(_ => _[0]).join('')
+    const [avatarUrl, setAvatarUrl] = useState<string | undefined>(userData?.avatarUrl ?? undefined)
+    const avatarLetters = userData?.fullname.split(' ').map(_ => _[0]).join('')
 
     const handleChangeImage = async (event: ChangeEvent<HTMLInputElement>): Promise<void> => {
         const target = event.target as HTMLInputElement
-        const file = target.files[0]
+        const file = target.files?.[0]
         if (file) {
             const imageUrl = URL.createObjectURL(file)
             setAvatarUrl(imageUrl)

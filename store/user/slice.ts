@@ -4,7 +4,7 @@ import { UserData } from '@pages/index'
 import { AppState } from '@store/types'
 
 export const UserSliceState = {
-    data: null as UserData,
+    data: null as UserData | null,
 }
 
 export const slice = createSlice({

@@ -16,10 +16,12 @@ export const Room: React.FC<RoomProps> = ({ title }) => {
                 <h2 className={styles.title}>{title}</h2>
                 <div className={clsx('d-flex align-items-center', styles.actionButtons)}>
                     <Link href='/rooms'>
-                        <Button color='gray' className={styles.leaveButton}>
-                            <img width={18} height={18} src='/static/peace.png' alt='Hand black' />
-                            Leave quietly
-                        </Button>
+                        <a>
+                            <Button color='gray' className={styles.leaveButton}>
+                                <img width={18} height={18} src='/static/peace.png' alt='Hand black' />
+                                Leave quietly
+                            </Button>
+                        </a>
                     </Link>
                 </div>
             </div>

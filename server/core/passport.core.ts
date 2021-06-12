@@ -34,8 +34,8 @@ passport.use(
 
 
 passport.use('github', <passport.Strategy>new GithubStrategy({
-        clientID: process.env.GITHUB_CLIENT_ID,
-        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        clientID: process.env.GITHUB_CLIENT_ID ?? '',
+        clientSecret: process.env.GITHUB_CLIENT_SECRET ?? '',
         callbackURL: `${process.env.SERVER_URL}/auth/github/callback`,
     },
     async (_, __, profile, done) => {
@@ -44,10 +44,10 @@ passport.use('github', <passport.Strategy>new GithubStrategy({
 
             const userObj: Omit<UserData, 'id' | 'createdAt' | 'updatedAt' | 'token'> = {
                 fullname: profile.displayName,
-                avatarUrl: profile.photos?.[0].value,
+                avatarUrl: profile.photos?.[0].value ?? null,
                 isActive: 0,
-                username: profile.username,
-                phone: '',
+                username: profile.username ?? null,
+                phone: null,
             }
 
             const findUser = await User.findOne({
@@ -78,7 +78,7 @@ passport.serializeUser(function(user, done) {
 })
 
 passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user) {
+    User.findById(id, function(err: any, user: any) {
         err ? done(err) : done(null, user)
     })
 })

@@ -12,7 +12,7 @@ interface EnterNameStepProps {}
 
 export const EnterNameStep: FC<EnterNameStepProps> = () => {
     const { onNextStep, userData, setFieldValue } = useContext(StepsContext)
-    const [inputValue, setInputValue] = useState<string>(userData.fullname ?? '')
+    const [inputValue, setInputValue] = useState<string>(userData?.fullname ?? '')
 
     const nextDisabled = !inputValue
 

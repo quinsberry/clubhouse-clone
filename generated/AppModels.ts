@@ -39,10 +39,10 @@ export interface $Room {
 export interface $User {
     id: number
     fullname: string
-    avatarUrl: string
+    avatarUrl: string | null
     isActive: number
-    username: string
-    phone: string
+    username: string | null
+    phone: string | null
     createdAt: Date
     updatedAt: Date
 }

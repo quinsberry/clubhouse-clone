@@ -18,10 +18,9 @@ export const GithubStep: FC<GithubStepProps> = () => {
     const router = useRouter()
 
     useEffect(() => {
-        const handleOnMessage = ({ data }) => {
-            const userJson: string = data
-            if (typeof userJson === 'string' && userJson.includes('avatarUrl')) {
-                const user = JSON.parse(userJson)
+        const handleOnMessage = ({ data }: { data: object | string }) => {
+            if (typeof data === 'string' && data.includes('avatarUrl')) {
+                const user = JSON.parse(data)
                 setUserData(user)
                 if (!!user.isActive) {
                     router.push('/rooms')

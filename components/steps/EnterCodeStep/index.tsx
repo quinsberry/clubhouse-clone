@@ -34,6 +34,9 @@ export const EnterCodeStep: FC<EnterCodeStepProps> = () => {
 
     const onSubmit = async () => {
         try {
+            if (!userData) {
+                return console.error('userData not found')
+            }
             setIsLoading(true)
             await ClientService().sendActivationCode({
                 code,
