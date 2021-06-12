@@ -8,6 +8,10 @@ export function assertNonNull<T>(value: T, message?: string): asserts value is N
     return assertType<T>(value, value => value != null, message)
 }
 
+export function isOfType<T>(value: any, predicate: (value: any) => boolean): value is T {
+    return predicate(value)
+}
+
 export function validateFirstElementInList(list: any[], check: (element: any) => boolean): boolean {
     if (Array.isArray(list)) {
         if (list.length > 0) {

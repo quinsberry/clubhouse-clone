@@ -6,8 +6,15 @@ import { Room } from '@api/room.api'
 import { ClientService } from '@services/clientService'
 import { assertType } from '@tps/guards.types'
 import { isRoom } from '@utils/entitiesCheckers'
+import { checkAuth } from '@utils/checkAuth'
+import { storeWrapper } from '@store/store'
+import { FC } from 'react'
 
-export default function RoomPage({ room }: { room?: Room }) {
+interface RoomPageProps {
+    room?: Room
+}
+
+const RoomPage: FC<RoomPageProps> = ({ room }) => {
     return (
         <>
             <Header />
@@ -19,10 +26,21 @@ export default function RoomPage({ room }: { room?: Room }) {
     )
 }
 
-export const getServerSideProps: GetServerSideProps<{ room: Room }> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<RoomPageProps> = storeWrapper.getServerSideProps(store => async ctx => {
     try {
+        const user = await checkAuth(ctx, store)
+        if (!user) {
+            return {
+                redirect: {
+                    permanent: false,
+                    destination: '/',
+                },
+            }
+        }
+
         const roomId = ctx.query.id as string
         const room = await ClientService(ctx).getRoom(roomId)
+        console.log(room)
         assertType<Room>(room, room => isRoom(room))
 
         return {
@@ -33,11 +51,12 @@ export const getServerSideProps: GetServerSideProps<{ room: Room }> = async (ctx
     } catch (error) {
         console.log(`Room page, ${error.response.status}: ${error.response.statusText}`)
         return {
-            props: {},
             redirect: {
                 permanent: false,
                 destination: '/rooms',
             },
         }
     }
-}
+})
+
+export default RoomPage

@@ -1,6 +1,9 @@
 import { useRouter } from 'next/router'
 import { Header } from '@components/Header'
 import { Profile } from '@components/Profile'
+import { GetServerSideProps } from 'next'
+import { storeWrapper } from '@store/store'
+import { checkAuth } from '@utils/checkAuth'
 
 export default function ProfilePage() {
     const router = useRouter()
@@ -20,3 +23,31 @@ export default function ProfilePage() {
         </>
     )
 }
+
+export const getServerSideProps: GetServerSideProps = storeWrapper.getServerSideProps(store => async ctx => {
+    try {
+        const user = await checkAuth(ctx, store)
+        if (!user) {
+            return {
+                props: {},
+                redirect: {
+                    permanent: false,
+                    destination: '/',
+                },
+            }
+        }
+
+        return {
+            props: {},
+        }
+    } catch (error) {
+        console.log(`Profile page, ${error.response.status}: ${error.response.statusText}`)
+        return {
+            props: {},
+            redirect: {
+                permanent: false,
+                destination: '/',
+            },
+        }
+    }
+})
