@@ -10,12 +10,18 @@ import { ClientService } from '@services/clientService'
 import { Room } from '@api/room.api'
 import { assertType, validateFirstElementInList } from '@tps/guards.types'
 import { isRoom } from '@utils/entitiesCheckers'
+import { storeWrapper } from '@store/store'
+import { setRooms } from '@store/rooms/slice'
+import { useTypedSelector } from '@hooks/useReduxHooks'
+import { selectRooms } from '@store/rooms/selectors'
 
 interface RoomsPageProps {
     rooms: Room[]
 }
-const RoomsPage: NextPage<RoomsPageProps> = ({ rooms = [] }) => {
+
+const RoomsPage: NextPage<RoomsPageProps> = () => {
     const [visibleModal, setVisibleModal] = useState(false)
+    const rooms = useTypedSelector(selectRooms)
 
     return (
         <>
@@ -44,9 +50,10 @@ const RoomsPage: NextPage<RoomsPageProps> = ({ rooms = [] }) => {
     )
 }
 
-export const getServerSideProps: GetServerSideProps<{ rooms: Room[] }> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps = storeWrapper.getServerSideProps(
+    store => async ctx => {
     try {
-        const user = await checkAuth(ctx)
+        const user = await checkAuth(ctx, store)
 
         if (!user) {
             return {
@@ -60,20 +67,17 @@ export const getServerSideProps: GetServerSideProps<{ rooms: Room[] }> = async (
 
         const rooms = await ClientService(ctx).getRooms()
         assertType<Room[]>(rooms, rooms => validateFirstElementInList(rooms, isRoom))
+        store.dispatch(setRooms(rooms))
 
         return {
-            props: {
-                rooms,
-            },
+            props: {},
         }
     } catch (error) {
         console.error('RoomsPage/getServerSideProps error:\n', error)
         return {
-            props: {
-                rooms: [],
-            },
+            props: {},
         }
     }
-}
+})
 
 export default RoomsPage

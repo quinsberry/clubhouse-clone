@@ -1,10 +1,20 @@
-import { FC, ReactElement } from 'react'
-import { AppProps } from 'next/app'
+import React from 'react'
+import App, { AppContext } from 'next/app'
+import { storeWrapper } from '@store/store'
 
 import '@styles/globals.scss'
 
-const MyApp: FC<AppProps> = ({ Component, pageProps }): ReactElement => {
-    return <Component {...pageProps} />
+
+class MyApp extends App {
+    static async getServer({ Component, ctx }: AppContext) {
+        const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {}
+        return { pageProps }
+    }
+
+    render() {
+        const { Component, pageProps } = this.props
+        return <Component {...pageProps} />
+    }
 }
 
-export default MyApp
+export default storeWrapper.withRedux(MyApp)

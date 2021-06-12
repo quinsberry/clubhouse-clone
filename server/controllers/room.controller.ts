@@ -3,11 +3,9 @@ import { Request, Response } from 'express'
 import { Room } from '@server/database/models'
 
 
-export enum RoomType {
-    Open = 'open',
-    Social = 'social',
-    Closed = 'closed',
-}
+export type RoomType = 'open' | 'social' | 'closed'
+
+const availableRoomsType: RoomType[] = ['open', 'social', 'closed']
 
 class RoomController {
     async index(req: Request, res: Response) {
@@ -20,6 +18,7 @@ class RoomController {
     }
 
     async create(req: Request, res: Response) {
+        const availableRoomsTypeSet = new Set(availableRoomsType)
         try {
             const data = {
                 title: req.body.title,
@@ -30,7 +29,7 @@ class RoomController {
                 return res.status(400).json({ message: 'Title or type was not found' })
             }
 
-            if (data.type !== RoomType.Open || data.type !== RoomType.Social || data.type !== RoomType.Closed) {
+            if (!availableRoomsTypeSet.has(data.type)) {
                 return res.status(422).json({ message: 'Invalid room type' })
             }
 

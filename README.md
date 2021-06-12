@@ -5,14 +5,14 @@
 Clubhouse Clone frontend and backend parts. </br>
 
 
-**Technologies:** Next.js, NodeJS, MySQL, Express, Typescript </br>
-**Libraries:** sequelize, redux, immer </br>
+**Technologies:** Next.js, Express, PostgreSQL, WebRTC, Typescript </br>
+**Libraries:** sequelize, redux/toolkit, socket.io </br>
 
 ## Installation
 
 1. `npm install`
 2. Create `.env` file by `cp .env.example .env` command.
-3. Install MySQL if you didn't do that yet.
+3. Install PostgreSQL if you didn't do that yet.
 
 ## Running the app
 

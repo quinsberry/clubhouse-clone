@@ -10,6 +10,7 @@ import { ValueOf } from '@tps/utils.types'
 import { PersistenceService } from '@services/persistenceService'
 import { checkAuth } from '@utils/checkAuth'
 import { $User } from '@generated/AppModels'
+import { storeWrapper } from '@store/store'
 
 export interface UserData extends $User {
     token?: string
@@ -71,21 +72,23 @@ export default function Home() {
     )
 }
 
-export const getServerSideProps = async (ctx) => {
-    try {
-        const user = await checkAuth(ctx)
+export const getServerSideProps = storeWrapper.getServerSideProps(
+    store => async ctx => {
+        try {
+            const user = await checkAuth(ctx, store)
 
-        if (user) {
-            return {
-                props: {},
-                redirect: {
-                    destination: '/rooms',
-                    permanent: false,
-                },
+            if (user) {
+                return {
+                    props: {},
+                    redirect: {
+                        destination: '/rooms',
+                        permanent: false,
+                    },
+                }
             }
+            return { props: {} }
+        } catch (err) {
+            return { props: {} }
         }
-        return { props: {} }
-    } catch (err) {
-        return { props: {} }
     }
-}
+)

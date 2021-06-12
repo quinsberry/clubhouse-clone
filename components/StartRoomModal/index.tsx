@@ -3,11 +3,10 @@ import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import styles from './StartRoomModal.module.scss'
 import { Button } from '@components/common/Button'
-import { Room } from '@api/room.api'
-import { ClientService } from '@services/clientService'
-import { assertType } from '@tps/guards.types'
-import { isRoom } from '@utils/entitiesCheckers'
 import { $RoomType } from '@generated/AppModels'
+import { useAsyncAction } from '@hooks/useAsyncAction'
+import { fetchCreateRoom } from '@store/rooms/operations'
+
 
 interface StartRoomModalProps {
     onClose: () => void;
@@ -18,7 +17,7 @@ export const StartRoomModal: React.FC<StartRoomModalProps> = ({ onClose }) => {
 
     const [title, setTitle] = React.useState<string>('')
     const [type, setType] = React.useState<$RoomType>($RoomType.Open)
-    // const createRoom = useAsyncAction<any, Room>(fetchCreateRoom)
+    const createRoom = useAsyncAction(fetchCreateRoom)
 
     const modalRef = useRef<HTMLDivElement>()
 
@@ -26,9 +25,7 @@ export const StartRoomModal: React.FC<StartRoomModalProps> = ({ onClose }) => {
         if (!title) {
             return alert('Enter a header of the room')
         }
-        const room = await ClientService().createRoom({ title, type })
-        assertType<Room>(room, room => isRoom(room))
-
+        const room = await createRoom({ title, type })
         router.push(`/rooms/${room.id}`)
     }
 
