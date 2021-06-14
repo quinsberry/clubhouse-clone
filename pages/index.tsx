@@ -10,7 +10,7 @@ import { PersistenceService } from '@services/persistenceService'
 import { checkAuth } from '@utils/checkAuth'
 import { $User } from '@generated/AppModels'
 import { storeWrapper } from '@store/store'
-import { assertNonNull } from '@tps/guards.types'
+import { assertNonNull } from '@utils/type-guards'
 
 export interface UserData extends $User {
     token?: string

@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { StartRoomModal } from '@components/StartRoomModal'
 import { ClientService } from '@services/clientService'
 import { Room } from '@api/room.api'
-import { assertType, validateFirstElementInList } from '@tps/guards.types'
+import { assertType, validateFirstElementInList } from '@utils/type-guards'
 import { isRoom } from '@utils/entitiesCheckers'
 import { storeWrapper } from '@store/store'
 import { setRooms } from '@store/rooms/slice'
@@ -66,6 +66,7 @@ export const getServerSideProps: GetServerSideProps = storeWrapper.getServerSide
         }
 
         const rooms = await ClientService(ctx).getRooms()
+        console.log(rooms)
         assertType<Room[]>(rooms, rooms => validateFirstElementInList(rooms, isRoom))
         store.dispatch(setRooms(rooms))
 

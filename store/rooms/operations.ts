@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { Room } from '@api/room.api'
 import { $RoomType } from '@generated/AppModels'
 import { ClientService } from '@services/clientService'
-import { assertType } from '@tps/guards.types'
+import { assertType } from '@utils/type-guards'
 import { isRoom } from '@utils/entitiesCheckers'
 
 export const fetchCreateRoom = createAsyncThunk<Room, { title: string; type: $RoomType }>(

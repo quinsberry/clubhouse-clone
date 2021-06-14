@@ -1,31 +1,8 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-// TODO: Make creating of this content automatic
-const additionalContent = `
-export enum $CookieKeys {
-    TOKEN = 'clubhstoken',
-}
-
-export enum $RoomType {
-    Open = 'open',
-    Social = 'social',
-    Closed = 'closed',
-}
-`
-
-
 // TODO: Make creating of this content automatic too (use models files)
-const generatedContent = `
-/*
- * Generator-Maintained File
- * TypeScript representation of server side models being used
- * Note: $ is appended to the names of all classes. This is to differentiate from client side naming
- * DO NOT MANUALLY EDIT THIS FILE.
- */
- 
- ${additionalContent}
-
+const modelsContent = `
 export interface $Code {
     id: number
     code: string
@@ -67,9 +44,38 @@ export const generateTsModels = () => {
         if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath)
         }
-        fs.writeFileSync(path.join(folderPath, fileName), generatedContent)
+
+        fs.writeFileSync(path.join(folderPath, fileName), generateContent(getAdditionalTypesFromServer()))
         console.log('AppModel was generated successfully')
     } catch (error) {
         console.log('App model generating error: \n', error)
     }
+}
+
+function generateContent(additionalContent: string) {
+    const title =
+`
+/*
+ * Generator-Maintained File
+ * TypeScript representation of server side models being used
+ * Note: $ is appended to the names of all classes. This is to differentiate from client side naming
+ * DO NOT MANUALLY EDIT THIS FILE.
+ */
+`
+    return `
+    ${title}
+    ${additionalContent}
+    ${modelsContent}
+    `
+}
+
+function getAdditionalTypesFromServer() {
+    const clientTypesFilePath = path.resolve(__dirname, '..', 'types', 'client.types.ts')
+    const typesForClient = fs.readFileSync(clientTypesFilePath)
+
+    const result =
+`
+${typesForClient}
+`
+    return result
 }

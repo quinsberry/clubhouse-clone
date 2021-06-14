@@ -7,7 +7,7 @@ import { Button } from '@components/common/Button'
 import { StepsContext } from '@pages/index'
 
 import styles from './GithubStep.module.scss'
-import { BASE_URL } from '@core/axios'
+import { SERVER_URL } from '@core/axios'
 import { useRouter } from 'next/router'
 
 interface GithubStepProps {
@@ -38,7 +38,7 @@ export const GithubStep: FC<GithubStepProps> = () => {
 
     const onClickAuth = () => {
         window.open(
-            `${BASE_URL}/auth/github`,
+            `${SERVER_URL}/auth/github`,
             'Auth',
             'width=500,height=500,status=yes,toolbar=no,menubar=no,location=no',
         )

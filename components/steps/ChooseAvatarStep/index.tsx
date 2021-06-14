@@ -5,7 +5,7 @@ import { WhiteBlock } from '@components/common/WhiteBlock'
 import { Avatar } from '@components/common/Avatar'
 import { Button } from '@components/common/Button'
 import { StepsContext } from '@pages/index'
-import { assertType } from '@tps/guards.types'
+import { assertType } from '@utils/type-guards'
 import styles from './ChooseAvatarStep.module.scss'
 import { ClientService } from '@services/clientService'
 

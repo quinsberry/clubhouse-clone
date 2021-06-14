@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next'
 import axios, { AxiosInstance } from 'axios'
-import { BASE_URL } from '@core/axios'
+import { SERVER_URL } from '@core/axios'
 import { UserApi } from '@api/user.api'
 import { Axios } from '@core/axios'
 import { AuthApi } from '@api/auth.api'
@@ -19,7 +19,7 @@ export const ClientService = (ctx?: GetServerSidePropsContext): ClientServiceEnd
         const token = ctx.req.cookies[$CookieKeys.TOKEN]
 
         instance = axios.create({
-            baseURL: BASE_URL,
+            baseURL: SERVER_URL,
             headers: {
                 cookie: `${[$CookieKeys.TOKEN]}=${token}`,
             },

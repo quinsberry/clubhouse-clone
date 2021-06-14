@@ -29,7 +29,7 @@ export const ConversationCard: FC<ConversationCard> = ({
                             key={user.id}
                             width='45px'
                             height='45px'
-                            src={user.avatarUrl}
+                            src={user.avatarUrl ?? undefined}
                             className={speakers.length > 1 && i === speakers.length - 1 ? 'lastAvatar' : ''}
                         />
                     ))}

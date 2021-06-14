@@ -5,17 +5,14 @@ import { Strategy as JwtStrategy } from 'passport-jwt'
 import cookie from 'cookie'
 import { UserData } from '@pages/index'
 import { createJwtToken } from '@server/utils/createJwtToken'
+import { $CookieKeys } from '@server/types/client.types'
 // @ts-ignore Import model from js file
 import { User } from '@server/database/models'
-
-export enum CookieKeys {
-    TOKEN = 'clubhstoken',
-}
 
 const cookieExtractor = (req: Request) => {
     let token = null
     if (req && req.headers.cookie) {
-        token = cookie.parse(req.headers.cookie)[CookieKeys.TOKEN]
+        token = cookie.parse(req.headers.cookie)[$CookieKeys.TOKEN]
     }
     return token
 }

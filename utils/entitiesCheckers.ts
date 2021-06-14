@@ -1,6 +1,6 @@
 import { Room, UserDataWithRoomId } from '@api/room.api'
 import { UserData } from '@pages/index'
-import { validateFirstElementInList } from '@tps/guards.types'
+import { validateFirstElementInList } from '@utils/type-guards'
 
 export const isUserData = (entry: any): entry is UserData => {
     return entry != null

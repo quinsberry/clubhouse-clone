@@ -3,7 +3,7 @@ import cookie from 'cookie'
 // @ts-ignore Import models from js file
 import { Code, User } from '@server/database/models'
 import { omit } from '@server/utils/helpers'
-import { CookieKeys } from '@server/core/passport.core'
+import { $CookieKeys } from '@server/types/client.types'
 // import axios from 'axios'
 // import { generateRandomCode } from '@server/utils/generateRandomCode'
 
@@ -16,7 +16,7 @@ class AuthController {
     githubCallback(req: Request, res: Response) {
         res.set(
             'Set-Cookie',
-            cookie.serialize(CookieKeys.TOKEN, req.user!.token!, {
+            cookie.serialize($CookieKeys.TOKEN, req.user!.token!, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',

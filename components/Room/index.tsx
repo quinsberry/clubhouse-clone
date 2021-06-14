@@ -1,14 +1,14 @@
 import clsx from 'clsx'
 import Link from 'next/link'
-import React from 'react'
-
+import React, { useEffect } from 'react'
 import styles from './Room.module.scss'
 import { Button } from '@components/common/Button'
 import { useRouter } from 'next/router'
 import { useTypedSelector } from '@hooks/useReduxHooks'
 import { selectUserData } from '@store/user/selectors'
-import { UserData } from '@pages/index'
 import { Speaker } from '@components/Speaker'
+import { useSocket } from '@hooks/userSocket'
+import { UserData } from '@pages/index'
 
 interface RoomProps {
     title: string
@@ -19,6 +19,26 @@ export const Room: React.FC<RoomProps> = ({ title }) => {
     const user = useTypedSelector(selectUserData)
     const [users, setUsers] = React.useState<UserData[]>([])
     const roomId = router.query.id
+    const socket = useSocket()
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            socket.emit('CLIENT@ROOMS:JOIN', {
+                user,
+                roomId,
+            })
+
+            socket.on('SERVER@ROOMS:JOIN', (allUsers: UserData[]) => {
+                setUsers(allUsers)
+            })
+
+            socket.on('SERVER@ROOMS:LEAVE', (leaveUser: UserData) => {
+                setUsers(prev => prev.filter(prevUser => prevUser.id !== leaveUser.id))
+            })
+        }
+
+    }, [])
+
 
     return (
         <div className={styles.wrapper}>
@@ -35,9 +55,9 @@ export const Room: React.FC<RoomProps> = ({ title }) => {
                     </Link>
                 </div>
             </div>
-            <div className='users'>
-                {users.map((userData) => (
-                    <Speaker key={userData.fullname} {...userData} />
+            <div className={styles.users}>
+                {users.map((userData, idx) => (
+                    <Speaker key={`${userData.fullname}${idx}`} {...userData} isVoice={true} />
                 ))}
             </div>
         </div>

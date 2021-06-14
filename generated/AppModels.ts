@@ -1,12 +1,27 @@
 
+    
 /*
  * Generator-Maintained File
  * TypeScript representation of server side models being used
  * Note: $ is appended to the names of all classes. This is to differentiate from client side naming
  * DO NOT MANUALLY EDIT THIS FILE.
  */
- 
- 
+
+    
+export enum $ClientSocketApi {
+    JOIN = 'CLIENT@ROOMS:JOIN',
+    CALL = 'CLIENT@ROOMS:CALL',
+    ANSWER = 'CLIENT@ROOMS:ANSWER',
+}
+
+export enum $ServerSocketApi {
+    JOIN = 'SERVER@ROOMS:JOIN',
+    CALL = 'SERVER@ROOMS:CALL',
+    ANSWER = 'SERVER@ROOMS:ANSWER',
+    HOME = 'SERVER@ROOMS:HOME',
+    LEAVE = 'SERVER@ROOMS:LEAVE',
+}
+
 export enum $CookieKeys {
     TOKEN = 'clubhstoken',
 }
@@ -17,7 +32,7 @@ export enum $RoomType {
     Closed = 'closed',
 }
 
-
+    
 export interface $Code {
     id: number
     code: string
@@ -46,3 +61,5 @@ export interface $User {
     createdAt: Date
     updatedAt: Date
 }
+
+    

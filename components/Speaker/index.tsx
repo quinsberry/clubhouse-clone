@@ -6,13 +6,14 @@ export type SpeakerProps = {
     id: number
     fullname: string
     avatarUrl: string | null
+    isVoice: boolean
 };
 
-export const Speaker: FC<SpeakerProps> = ({ id, fullname, avatarUrl }) => {
+export const Speaker: FC<SpeakerProps> = ({ id, fullname, avatarUrl, isVoice }) => {
     return (
         <Link href={`/profile/${id}`}>
-            <a className='d-i-flex flex-column align-items-center mr-40 mb-40'>
-                <Avatar src={avatarUrl ?? undefined} height='100px' width='100px' />
+            <a className='d-if flex-column align-items-center'>
+                <Avatar src={avatarUrl ?? undefined} height='100px' width='100px' isVoice={isVoice} />
                 <div className='mt-10'>
                     <b>{fullname}</b>
                 </div>

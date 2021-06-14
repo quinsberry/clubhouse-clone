@@ -1,6 +1,6 @@
 import { UserData } from '@pages/index'
 import { GetServerSidePropsContext } from 'next'
-import { assertType } from '@tps/guards.types'
+import { assertType } from '@utils/type-guards'
 import { ClientService } from '@services/clientService'
 import { isUserData } from '@utils/entitiesCheckers'
 import { Store } from '@reduxjs/toolkit'

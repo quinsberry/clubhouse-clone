@@ -10,8 +10,8 @@ export const useAsyncAction = <Returned, Arg = any>(
     return useCallback(
         (arg: Arg) =>
             dispatch(actionCreator(arg))
-                .then((result) => unwrapResult(result))
-                .catch((err) => Promise.reject(err)),
+                .then((result: any) => unwrapResult(result))
+                .catch((err: any) => Promise.reject(err)),
         [dispatch, actionCreator],
     )
 }

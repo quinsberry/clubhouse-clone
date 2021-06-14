@@ -1,11 +1,10 @@
 import { Request, Response } from 'express'
 // @ts-ignore Import models from js file
 import { Room } from '@server/database/models'
+import { $RoomType } from '@server/types/client.types'
 
 
-export type RoomType = 'open' | 'social' | 'closed'
-
-const availableRoomsType: RoomType[] = ['open', 'social', 'closed']
+const availableRoomsType: $RoomType[] = [$RoomType.Open, $RoomType.Social, $RoomType.Closed]
 
 class RoomController {
     async index(req: Request, res: Response) {

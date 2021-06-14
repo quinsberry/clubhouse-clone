@@ -46,3 +46,12 @@
 .title {
   flex: 1;
 }
+
+.users {
+  display: inline-flex;
+  flex-wrap: wrap;
+
+  a {
+    margin: 15px 20px;
+  }
+}

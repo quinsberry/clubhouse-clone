@@ -10,6 +10,22 @@
     "migrate": "npx sequelize-cli db:migrate",
     "test": "jest --logHeapUsage"
   },
+  "jest": {
+    "moduleNameMapper": {
+      "^@api(.*)$": "<rootDir>/api$1",
+      "^@components(.*)$": "<rootDir>/components$1",
+      "^@core(.*)$": "<rootDir>/core$1",
+      "^@generated(.*)$": "<rootDir>/generated$1",
+      "^@hooks(.*)$": "<rootDir>/hooks$1",
+      "^@pages(.*)$": "<rootDir>/pages$1",
+      "^@services(.*)$": "<rootDir>/services$1",
+      "^@store(.*)$": "<rootDir>/store$1",
+      "^@styles(.*)$": "<rootDir>/styles$1",
+      "^@tps(.*)$": "<rootDir>/tps$1",
+      "^@utils(.*)$": "<rootDir>/utils$1",
+      "^@server(.*)$": "<rootDir>/server$1"
+    }
+  },
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.0",
     "axios": "^0.21.1",
@@ -40,6 +56,9 @@
     "socket.io-client": "^4.1.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.14.5",
+    "@babel/preset-env": "^7.14.5",
+    "@babel/preset-typescript": "^7.14.5",
     "@testing-library/dom": "^7.31.2",
     "@testing-library/jest-dom": "^5.13.0",
     "@testing-library/react": "^11.2.7",
@@ -56,6 +75,7 @@
     "@types/react": "^17.0.3",
     "@types/sharp": "^0.28.1",
     "babel-jest": "^27.0.2",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^27.0.4",
     "jest-dom": "^4.0.0",
     "sequelize-cli": "^6.2.0",
