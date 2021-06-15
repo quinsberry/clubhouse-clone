@@ -6,6 +6,10 @@ export const UserApi = (instance: AxiosInstance) => {
             const { data } = await instance.get<unknown>('/auth/me')
             return data
         },
+        getUserInfo: async (id: number): Promise<unknown> => {
+            const { data } = await instance.get('/users/' + id)
+            return data
+        },
         uploadAvatar: async (photoFile: File): Promise<unknown> => {
             const formData = new FormData()
             formData.append('photo', photoFile)
