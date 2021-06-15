@@ -24,23 +24,40 @@ export const ConversationCard: FC<ConversationCard> = ({
             <h4 className={styles.title}>{title}</h4>
             <div className={clsx('d-flex mt-10', styles.content)}>
                 <div className={styles.avatars}>
-                    {speakers.map((user, i) => (
-                        <Avatar
-                            key={user.id}
-                            width='45px'
-                            height='45px'
-                            src={user.avatarUrl ?? undefined}
-                            className={speakers.length > 1 && i === speakers.length - 1 ? 'lastAvatar' : ''}
-                        />
-                    ))}
+                    {speakers.map((user, idx) => {
+                        if (idx >= 2) {
+                            return
+                        }
+                        return (
+                            <Avatar
+                                key={user.id}
+                                width='45px'
+                                height='45px'
+                                src={user.avatarUrl ?? undefined}
+                                className={idx === 1 ? 'lastAvatar' : ''}
+                            />
+                        )
+                    })}
                 </div>
                 <div className={clsx(styles.info, 'ml-10')}>
                     <ul className={styles.users}>
-                        {speakers.map(user => (
-                            <li key={user.id}>
-                                {user.fullname} <img src='/static/cloud.png' alt='Cloud' width={14} height={14} />
-                            </li>
-                        ))}
+                        {speakers.map((user, idx) => {
+                            if (idx > 2) {
+                                return undefined
+                            } else if ( idx === 2) {
+                                return (
+                                    <li key={user.id}>
+                                        ...
+                                    </li>
+                                )
+                            } else {
+                                return (
+                                    <li key={user.id}>
+                                        {user.fullname} <img src='/static/cloud.png' alt='Cloud' width={14} height={14} />
+                                    </li>
+                                )
+                            }
+                        })}
                     </ul>
                     <ul className={styles.details}>
                         <li>

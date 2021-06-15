@@ -4,16 +4,18 @@ import { Header } from '@components/Header'
 import { Button } from '@components/common/Button'
 import { ConversationCard } from '@components/ConversationCard'
 import { checkAuth } from '@utils/checkAuth'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { StartRoomModal } from '@components/StartRoomModal'
 import { ClientService } from '@services/clientService'
 import { Room } from '@api/room.api'
 import { assertType, validateFirstElementInList } from '@utils/type-guards'
 import { isRoom } from '@utils/entitiesCheckers'
 import { storeWrapper } from '@store/store'
-import { setRooms } from '@store/rooms/slice'
-import { useTypedSelector } from '@hooks/useReduxHooks'
+import { setRooms, setRoomSpeakers } from '@store/rooms/slice'
+import { useTypedDispatch, useTypedSelector } from '@hooks/useReduxHooks'
 import { selectRooms } from '@store/rooms/selectors'
+import { useSocket } from '@hooks/userSocket'
+import { $ServerSocketApi } from '@generated/AppModels'
 
 interface RoomsPageProps {
     rooms: Room[]
@@ -22,6 +24,20 @@ interface RoomsPageProps {
 const RoomsPage: NextPage<RoomsPageProps> = () => {
     const [visibleModal, setVisibleModal] = useState(false)
     const rooms = useTypedSelector(selectRooms)
+    const dispatch = useTypedDispatch()
+    const socket = useSocket()
+
+    useEffect(() => {
+        const refetchRooms = async () => {
+            const rooms = await ClientService().getRooms()
+            assertType<Room[]>(rooms, rooms => validateFirstElementInList(rooms, isRoom))
+            dispatch(setRooms(rooms))
+        }
+        refetchRooms()
+        socket.on($ServerSocketApi.HOME, ({ roomId, speakers }) => {
+            dispatch(setRoomSpeakers({ speakers, roomId }))
+        })
+    }, [])
 
     return (
         <>
@@ -52,33 +68,32 @@ const RoomsPage: NextPage<RoomsPageProps> = () => {
 
 export const getServerSideProps: GetServerSideProps = storeWrapper.getServerSideProps(
     store => async ctx => {
-    try {
-        const user = await checkAuth(ctx, store)
+        try {
+            const user = await checkAuth(ctx, store)
 
-        if (!user) {
+            if (!user) {
+                return {
+                    props: {},
+                    redirect: {
+                        permanent: false,
+                        destination: '/',
+                    },
+                }
+            }
+
+            const rooms = await ClientService(ctx).getRooms()
+            assertType<Room[]>(rooms, rooms => validateFirstElementInList(rooms, isRoom))
+            store.dispatch(setRooms(rooms))
+
             return {
                 props: {},
-                redirect: {
-                    permanent: false,
-                    destination: '/',
-                },
+            }
+        } catch (error) {
+            console.error('RoomsPage/getServerSideProps error:\n', error)
+            return {
+                props: {},
             }
         }
-
-        const rooms = await ClientService(ctx).getRooms()
-        console.log(rooms)
-        assertType<Room[]>(rooms, rooms => validateFirstElementInList(rooms, isRoom))
-        store.dispatch(setRooms(rooms))
-
-        return {
-            props: {},
-        }
-    } catch (error) {
-        console.error('RoomsPage/getServerSideProps error:\n', error)
-        return {
-            props: {},
-        }
-    }
-})
+    })
 
 export default RoomsPage
