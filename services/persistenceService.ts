@@ -6,7 +6,7 @@ export class PersistenceService {
     }
 
     public static getUserData(): UserData | null {
-        return JSON.parse(window.localStorage.getItem('userData')) ?? null
+        return JSON.parse(window.localStorage.getItem('userData') ?? '') ?? null
     }
 
     public static removeUserData(): void {

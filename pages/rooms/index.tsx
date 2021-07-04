@@ -14,7 +14,7 @@ import { storeWrapper } from '@store/store'
 import { setRooms, setRoomSpeakers } from '@store/rooms/slice'
 import { useTypedDispatch, useTypedSelector } from '@hooks/useReduxHooks'
 import { selectRooms } from '@store/rooms/selectors'
-import { useSocket } from '@hooks/userSocket'
+import { useSocket } from '@hooks/useSocket'
 import { $ServerSocketApi } from '@generated/AppModels'
 
 interface RoomsPageProps {
