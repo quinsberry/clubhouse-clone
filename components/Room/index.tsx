@@ -19,17 +19,16 @@ interface RoomProps {
 
 export const Room: FunctionComponent<RoomProps> = ({ title }) => {
     const router = useRouter()
-    const user = useTypedSelector(selectUserData)
-    const audioRef = useRef<HTMLAudioElement>()
-    const [users, setUsers] = useState<UserData[]>([])
     const roomId = router.query.id
+    const user = useTypedSelector(selectUserData)
     const socket = useSocket()
-    const { peers, addPeer, createSignal, removePeer, hasPeer } = usePeers()
+    const { addPeer, createSignal, removePeer, hasPeer } = usePeers()
+    const audioRef = useRef<HTMLAudioElement>()
+    const streamRef = useRef<MediaStream>()
 
-    useEffect(() => {
-        console.log('isActive: ', audioRef.current?.paused)
-    }, [audioRef.current])
-
+    const [users, setUsers] = useState<UserData[]>([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [isConnected, setIsConnected] = useState(false)
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -41,6 +40,7 @@ export const Room: FunctionComponent<RoomProps> = ({ title }) => {
                     assertNonNull(user, 'Problems with receiving user info from the server')
                     socket.on('SERVER@ROOMS:JOIN', (allUsers: UserData[]) => {
                         setUsers(allUsers)
+                        setIsLoading(false)
 
                         allUsers.forEach((speaker) => {
                             if (user.id !== speaker.id && !hasPeer(speaker.id)) {
@@ -52,10 +52,6 @@ export const Room: FunctionComponent<RoomProps> = ({ title }) => {
 
                                 // Received the signal from ICE-server and asking all the members call me
                                 peerIncome.on('signal', (signal) => {
-                                    console.log(signal, 222)
-                                    console.log(
-                                        '1. СИГНАЛ СОЗДАН. ПРОСИМ ЮЗЕРА ' + speaker.fullname + ' НАМ ПОЗВОНИТЬ',
-                                    )
                                     socket.emit('CLIENT@ROOMS:CALL', {
                                         targetUserId: speaker.id,
                                         callerUserId: user.id,
@@ -68,7 +64,6 @@ export const Room: FunctionComponent<RoomProps> = ({ title }) => {
                                 socket.on(
                                     'SERVER@ROOMS:CALL',
                                     ({ targetUserId, callerUserId, signal: callerSignal }) => {
-                                        console.log('2. ЮЗЕР ' + callerUserId + ' ПОДКЛЮЧИЛСЯ, ЗВОНИМ!')
 
                                         const peerOutcome = new Peer({
                                             initiator: false,
@@ -82,10 +77,6 @@ export const Room: FunctionComponent<RoomProps> = ({ title }) => {
                                         peerOutcome
                                             // Receiving the signal from ICE-server and sending it to user for making connection
                                             .on('signal', (outSignal) => {
-                                                console.log(
-                                                    '3. ПОЛУЧИЛИ СИГНАЛ НАШ, ОТПРАВЛЯЕМ В ОТВЕТ ЮЗЕРУ ' + callerUserId,
-                                                )
-                                                console.log('peers: ', peers)
                                                 socket.emit('CLIENT@ROOMS:ANSWER', {
                                                     targetUserId: callerUserId,
                                                     callerUserId: targetUserId,
@@ -98,31 +89,32 @@ export const Room: FunctionComponent<RoomProps> = ({ title }) => {
                                                 const audio = document.querySelector('audio')
                                                 assertNonNull(audio, 'Cannot create p2p connection without audio element')
                                                 audioRef.current = audio
+                                                streamRef.current = stream
 
                                                 audioRef.current.srcObject = stream
                                                 audioRef.current.paused
                                                 audioRef.current.play()
+
+                                                setIsConnected(true)
                                             })
                                     },
                                 )
 
                                 socket.on('SERVER@ROOMS:ANSWER', ({ callerUserId, signal }) => {
                                     createSignal(callerUserId, signal)
-                                    console.log('4. МЫ ОТВЕТИЛИ ЮЗЕРУ', callerUserId)
                                 })
                             }
                         })
                     })
 
                     socket.on('SERVER@ROOMS:LEAVE', (leaveUser: UserData) => {
-                        console.log(leaveUser.id, peers)
                         removePeer(leaveUser.id)
                         setUsers(prev => prev.filter(user => user.id !== leaveUser.id))
 
                     })
                 })
                 .catch(() => {
-                    console.error('Нет доступа к микрофону')
+                    console.error('No access to microphone')
                 })
         }
     }, [])
@@ -145,8 +137,13 @@ export const Room: FunctionComponent<RoomProps> = ({ title }) => {
                 </div>
             </div>
             <div className={styles.users}>
-                {users.map((userData, idx) => (
-                    <Speaker key={`${userData.fullname}${idx}`} {...userData} isVoice={false} />
+                {isLoading ? null : users.map(userData => (
+                    <Speaker
+                        key={`${userData.fullname}${userData.id}`}
+                        {...userData}
+                        stream={streamRef.current}
+                        isConnected={isConnected}
+                    />
                 ))}
             </div>
         </div>
